@@ -3,4 +3,4 @@
 Building curiosity.
 Bridging the gap between education and the industry.
 
-[Official Site](thesemicolon.co)
+[Official Site](https://thesemicolon.co)
