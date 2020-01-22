@@ -1,2 +1,4 @@
 semicolon
 **/__pycache__
+**/.vscode
+*.db
