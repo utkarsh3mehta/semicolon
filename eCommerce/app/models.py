@@ -1,5 +1,16 @@
 from app import db
 from datetime import datetime
+from sqlalchemy.inspection import inspect
+
+class Serializer(object):
+
+    def serialize(self):
+        return {c: getattr(self, c) for c in inspect(self).attrs.keys()}
+
+    @staticmethod
+    def serialize_list(l):
+        return [m.serialize() for m in l]
+
 class Category(db.Model, Serializer):
     id = db.Column(db.Integer, primary_key=True)
     category_name = db.Column(db.String(128), index=True, unique=True)
@@ -23,3 +34,7 @@ class Product(db.Model, Serializer):
     def __repr__(self):
         return '<Product: {}>'.format(self.product_name)
 
+    def serialize(self):
+        p = Serializer.serialize(self)
+        p['category'] = Category.query.get(self.category_id).category_name
+        return p
