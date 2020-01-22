@@ -1,0 +1,2 @@
+FLASK_APP=eCommerce.py
+FLASK_ENV=development
