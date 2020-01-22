@@ -38,3 +38,8 @@ class Product(db.Model, Serializer):
         p = Serializer.serialize(self)
         p['category'] = Category.query.get(self.category_id).category_name
         return p
+
+    def from_dict(self, data):
+        for field in ['product_name', 'product_description', 'product_price', 'product_image','category_id']:
+            if field in data:
+                setattr(self, field, data[field])
