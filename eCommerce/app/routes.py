@@ -11,7 +11,7 @@ def index():
 def product(productid=None):
     if request.method == 'GET':
         if productid is not None:
-            return jsonify(Product.query.filter_by(id=productid).first_or_404().serialize())
+            return jsonify(Product.query.get_or_404(productid).serialize())
         else:
             return jsonify(Product.serialize_list(Product.query.all()))
     elif request.method == 'POST':
