@@ -7,16 +7,25 @@ from app.api.errors import bad_request
 
 
 @bp.route('/product/', methods=['GET','POST'])
-@bp.route('/product/<int:productid>', methods=['GET','POST'])
+@bp.route('/product/<int:productid>', methods=['GET','PUT'])
 def product(productid=None):
     if request.method == 'GET':
         if productid is not None:
             return jsonify(Product.query.get_or_404(productid).serialize())
         else:
             return jsonify(Product.serialize_list(Product.query.all()))
-    elif request.method == 'POST':
+    else:
         if productid is not None:
-            return 'this is put'
+            p = Product.query.get_or_404(productid)
+            data = request.get_json()
+            if 'product_name' in data and data['product_name'] != p.product_name and Product.query.filter_by(product_name=data['product_name']).first():
+                return bad_request('ID and Name do not match. You are trying to edit another product\'s details')
+            p.from_dict(data)
+            db.session.commit()
+            response = jsonify(p.serialize())
+            response.statuscode = 201
+            response.headers['Location'] = url_for('api.product', productid=p.id)
+            return response
         else:
             data = request.get_json() or {}
             if 'product_name' not in data or 'product_price' not in data or 'category_id' not in data:
