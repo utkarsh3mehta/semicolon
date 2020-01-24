@@ -40,3 +40,12 @@ def product(productid=None):
             response.statuscode = 201
             response.headers['Location'] = url_for('api.product', productid=p.id)
             return response
+
+@bp.route('/product/<int:productid>', methods=['DELETE'])
+def del_product(productid):
+    p = Product.query.get_or_404(productid)
+    db.session.delete(p)
+    db.session.commit()
+    response = jsonify(f'Product with name: {p.product_name} and id: {p.id} deleted')
+    response.statuscode = 201
+    return response

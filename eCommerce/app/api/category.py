@@ -45,3 +45,12 @@ def category(categoryid=None):
 def category_product(categoryid):
     c = Category.query.get(categoryid)
     return jsonify(Product.serialize_list(Product.query.filter_by(category=c)))
+
+@bp.route('/category/<int:categoryid>', methods=['DELETE'])
+def del_category(categoryid):
+    c = Category.query.get_or_404(categoryid)
+    db.session.delete(c)
+    db.session.commit()
+    response = jsonify(f'Category with name: {c.category_name} and id: {c.id} deleted')
+    response.statuscode = 201
+    return response
