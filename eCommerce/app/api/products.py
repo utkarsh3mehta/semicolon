@@ -6,8 +6,8 @@ from app.models import Product
 from app.api.errors import bad_request
 
 
-@bp.route('/product/', methods=['GET','POST'])
-@bp.route('/product/<int:productid>', methods=['GET','PUT'])
+@bp.route('/v1/product/', methods=['GET','POST'])
+@bp.route('/v1/product/<int:productid>', methods=['GET','PUT'])
 def product(productid=None):
     if request.method == 'GET':
         if productid is not None:
@@ -41,7 +41,7 @@ def product(productid=None):
             response.headers['Location'] = url_for('api.product', productid=p.id)
             return response
 
-@bp.route('/product/<int:productid>', methods=['DELETE'])
+@bp.route('/v1/product/<int:productid>', methods=['DELETE'])
 def del_product(productid):
     p = Product.query.get_or_404(productid)
     db.session.delete(p)

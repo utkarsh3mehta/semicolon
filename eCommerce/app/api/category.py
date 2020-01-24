@@ -6,8 +6,8 @@ from app.api.errors import bad_request
 from app.models import Category, Product
 
 
-@bp.route('/category/', methods=['GET','POST'])
-@bp.route('/category/<int:categoryid>', methods=['GET','PUT'])
+@bp.route('/v1/category/', methods=['GET','POST'])
+@bp.route('/v1/category/<int:categoryid>', methods=['GET','PUT'])
 def category(categoryid=None):
     if request.method == 'GET':
         if categoryid is not None:
@@ -41,12 +41,12 @@ def category(categoryid=None):
             response.headers['Location'] = url_for('api.category', categoryid=c.id)
             return response
 
-@bp.route('/category/<int:categoryid>/product/', methods=['GET'])
+@bp.route('/v1/category/<int:categoryid>/product/', methods=['GET'])
 def category_product(categoryid):
     c = Category.query.get(categoryid)
     return jsonify(Product.serialize_list(Product.query.filter_by(category=c)))
 
-@bp.route('/category/<int:categoryid>', methods=['DELETE'])
+@bp.route('/v1/category/<int:categoryid>', methods=['DELETE'])
 def del_category(categoryid):
     c = Category.query.get_or_404(categoryid)
     db.session.delete(c)
